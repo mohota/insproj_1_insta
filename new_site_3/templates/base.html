@@ -1,0 +1,99 @@
+{% load static %}
+
+
+<html> 
+	<header>
+		<title> {% block title %} Base blog {% endblock %}</title>
+		<link href="{% static 'css/new1.css' %}" rel="stylesheet" type="text/css">
+		
+		<style>#main:hover{ text-decoration: none; color: #DADADA} #mainpage:hover{ color: #DFDFDF;text-decoration: none;} #main { color: white; font-size: 14px; }
+		#articlepost {color: #920A7D; font-size: 22px;} #articlepost:hover{ color: #CB0EAE; text-decoration: none;}
+		#tags {font-size: 13px; color: #7A7A7A; } #tags:hover {text-decoration: none; color: black}	
+		</style>
+		
+		
+		<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+		<!-- <script src="{% static 'js/jQuery.js' %}"></script> -->
+		<!-- <script src="{% static 'js/popper.min.js' %}"></script> -->
+		<script src="{% static 'js/bwootstrap.min.js' %}"></script>	
+		
+		{% block script %}
+				
+		{% endblock %}
+		
+		
+	</header>
+	<body>
+		<div class="container-fluid">
+
+			<div class="row">
+				<div id="navbar" class="col-xl-11" style="background-color: #863186; box-shadow:0 0 12px #3E6A6C; margin-left: 50px; margin-top:1px">{% include "navbar.html" %}</div>
+				<div id="content" class="col-xl-11" style="background-color: #F3DEF3; height: auto; margin-left: 50px; margin-top: 10px; border-radius: 20px">					
+					{% block content %}
+						
+					{% endblock %}
+				</div>
+				
+				{% block footer %}		
+					<div id="footer" class="col-xl-11" style="background-color: #F3DEF3; height: 250px; margin-left: 50px; margin-top: 10px; border-radius: 10px">
+					
+					</div>
+				{% endblock %}
+				
+				<script > 		
+					$(document).ready(function() {
+						 {% block domready %} 
+							
+							
+							$.ajaxSetup({
+								  data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+								});
+								  
+							{% block prediction %} 
+											
+							{% endblock prediction %}		
+											
+							$('.likew').click(function(e){
+								
+								e.preventDefault();
+								$.post("/", {id:$(this).data('id'), action:$(this).data('action')},
+																function(data){if (data['status']=='ok'){
+																		var pre_action = $('.likew').data('action');
+																		
+																		$('.likew').text(pre_action=='like' ? 'DisLike' : 'Like');
+																		$('.likew').data('action', pre_action=='like'? 'dislike' : 'like');
+																		}}
+																		);
+								});
+							
+							$('.likee').click(function(){
+							$('p').css("color", "yellow");
+							$('h2').animate({opacity: '0.2'}, 2000);
+							});
+							
+							$('#leko').click(function(e){
+								
+								e.preventDefault();
+								$.get("/", {id:5, act:13}, function(data){$('#leko').text(data['state']);
+																									$('span').text(data['nor']);			
+																									$('#kil').append(data['loginf']);	
+																									$('#id_username').addClass('form-control');
+																									$('#id_password').addClass('form-control');
+																										});
+																										
+								});
+							
+							
+						 {% endblock %}
+											});
+					 
+		</script>
+			</div>
+
+		</div>
+
+	</body>
+
+</html>
+
+

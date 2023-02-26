@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block script %}
+				<style>
+					#lastlogin { font-size: 9px; margin-top: 10px}
+					
+				</style>
+{% endblock %}
+
+{% block content %}
+		
+		
+			<div style="background-color: ; width: 100%; height: auto; margin-top: 20px">
+				{% if users != False %}
+				<h4 style="margin-bottom: 40px">Your Directs until now are :</h4>
+					{% for user in users %}
+							
+							<img src="{% if user.prof_image %}{{user.prof_image.url}}{% else %}{% static 'images/image_not_found.jpg' %}{% endif %}" 
+										style="width: 80px; height: 80px; border-radius: 40px; float: left; margin-left: 30px; ">
+							<div style="float: left; width: 20%; background-color: ; margin: 20px auto auto 30px">
+								<a href="{{user.get_absolute_url}}" style="margin-bottom: 10px">{{user.username}}</a>
+								<h6 id="lastlogin">last Onlined :  {{user.last_logedout|date:"D j/M/Y" }} - {{user.last_logedout|time:"P" }}</h6>
+								
+							</div>
+							<div style="float: right; width: 20%; background-color: ">
+								<a href="{% url 'account:direct' user.id %}" class="btn btn-warning" style="margin-top: 20px">Chat here</a>
+								<!-- {% if useruest.user == obj %} -->
+									<!-- <form method="post" action="{% url 'account:followerings' user.id 'unfollow' %}" style="margin-top: 20px"> -->
+										<!-- {% csrf_token %} -->
+										<!-- <input name="user" value="unfollow" type="hidden"> -->
+										<!-- <input type="submit" class="btn btn-danger" value="Unfollow" name="rem" > -->
+									<!-- </form> -->
+								<!-- {% endif %} -->
+							</div>
+							
+							
+							<div style="float: left; width: 100%"><hr size=5 noshade></div>
+						
+					{% endfor %}
+					
+				{% else %}
+					<h2> <strong>There isn't any Direct Yet.</strong></h2>
+				{% endif %}
+			</div>
+			
+			
+{% endblock content %}
+
+
+							

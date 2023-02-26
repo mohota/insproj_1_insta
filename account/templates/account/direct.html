@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block script %}
+				<style>
+					div#sender { float: left; width: 80%; font-size: 15px; border-radius: 5px; box-shadow: 0 0 12px #3CFF9D; margin: 15px auto 15px auto; text-align: justify; padding: 8px; position: relative; }
+					div#reciever { float: left; width: 80%; font-size: 15px; border-radius: 5px; box-shadow: 0 0 12px #C55FC5; margin: 15px auto 15px auto; text-align: justify; padding: 8px; position: relative; }
+					p { font-family: Arial;}
+					span#lastlogin { font-size: 13px; }
+					span#commentdate { font-size: 10px; }
+					div#nothing {float: left; width: 15%; margin: 10px auto auto 20px}
+					pre {font-family: B Nazanin }
+				</style>
+{% endblock %}
+
+{% block content %}
+		   <!-- {{obj.last_login|time:"g:i:s P" }} --> 
+		<div style="background-color: ; height: auto; width: 1200px; margin-left: 100px">
+			<div style="background-color: ; width: 400px; margin-left: 480px">
+				<img src="{% if obj.prof_image %}{{obj.prof_image.url}}{% else %}{% static 'images/image_not_found.jpg' %}{% endif %}"  
+											style="width: 60px; height: 60px; border-radius: 30px; float: ; margin: 10px auto 10px 60px"> 
+											<br>
+											<span id="lastlogin">last Onlined :  {{obj.last_logedout|date:"D j/M/Y" }} - {{obj.last_logedout|time:"P" }}</span>
+			</div>
+			<div id="chat" style=" height: 350px; overflow: scroll; margin-top: 20px; box-shadow: 0 0 8px blue">
+				{% if results != False %}
+					{% for chat in results %}
+					
+						<div id="nothing" >
+								{{chat.user_from.username}}:<br>
+								<span id="commentdate">At : " {{chat.created|date:"j/M/Y" }} - {{chat.created|time:"g:i" }} "</span>
+						</div>
+						<div id="{% if request.user == chat.user_from %}sender{% else %}reciever{% endif %}" ><pre>{{chat.text}}</pre></div>
+					{% endfor %}
+				{% else %}
+				
+				{% endif %}
+			</div>
+			
+			<div id="chat-input" style=" margin-top: 10px; margin-bottom: 30px">
+				<input id="chat-message-input" type="text" class="form-control" style=" width: 100%">
+				<input id="chat-message-submit" type="submit" value="Send" class="btn btn-primary btn-block" style="margin-top: 10px">
+			</div>
+		</div>
+		
+		
+
+			
+			
+{% endblock content %}
+
+{% block footer %}	
+
+{% endblock footer %}
+
+
+
+{% block prediction %} 
+	
+								var $input = $('#chat-message-input');
+								var $submit = $('#chat-message-submit');
+								var $chat = $('#chat');
+								
+								$submit.click(function() {
+																var message = $input.val();
+																if(message) {
+																
+																// send message in JSON format
+																$.post("{% url 'account:direct' obj.id %}", {msg: message}, function(data){
+																	if (data['status'] == 'ok')
+																			{
+																			// clear input
+																			$input.val('');
+																			
+																			// return focus
+																			$input.focus();
+																			
+																			// append message to direct
+																			$chat.append('<div id="nothing">{{request.user.username}} :<br><span id="commentdate">At : " ' + data['time'] + ' "</span></div><div id="sender" ><pre>' + message + '</pre></div> </div>');
+																			$chat.scrollTop($chat[0].scrollHeight);
+																			
+																			}
+		
+																										});
+																																
+																
+
+																		};
+														});
+														
+														
+								
+								$input.focus();
+								$input.keyup(function(e) {
+											if (e.which === 13) {
+											
+											// submit with enter / return key
+											$submit.click();
+																}
+														});
+								
+								
+								
+								
+								
+								
+								
+								
+								$('a#public_follow').click(function(e){
+								
+								e.preventDefault();
+								$.post("{% url 'account:follow_unfollow' %}", {id:$(this).data('id'), action: $(this).data('action')}, function(data){
+																	if (data['status'] == 'ok')
+																			{
+																			var previous_action = $('a#public_follow').data('action');
+																			// toggle data-action
+																			$('a#public_follow').data('action', previous_action == 'follow' ?
+																			'unfollow' : 'follow');
+																			
+																			// toggle link text
+																			$('a#public_follow').text(previous_action == 'follow' ? 'Unfollow' :
+																			'Follow');
+																			// update total likes
+																			$('span#follower_count').text(data['user_followers']);
+																			$('span#following_count').text(data['user_followings']);
+																			$('a#public_follow').removeClass(previous_action == 'follow' ?'btn-success':'btn-danger').addClass(previous_action == 'follow' ?'btn-danger':'btn-success').show();
+																			
+																			}
+		
+																										});
+																    });
+																	
+								
+								
+								
+																	
+																	
+								
+								
+								$('a#private_follow').click(function(e){
+								
+								e.preventDefault();
+								$.post("{% url 'account:follow_request_requested' %}", {id:$(this).data('id'), action: $(this).data('action')}, function(data){
+																	if (data['status'] == 'ok')
+																			{
+																			var previous_action = $('a#private_follow').data('action');
+																			
+																			// toggle data-action
+																			if (previous_action=='unfollow'){
+																				$('a#private_follow').data('action', 'request');
+																				$('a#private_follow').text('Request to Follow');
+																				$('a#private_follow').removeClass('btn-danger').addClass('btn-success').show();
+																				
+																				$('span#follower_count').text(data['user_followers']);
+																				$('span#following_count').text(data['user_followings']);
+																				
+																				$('h5#posts').attr('style', 'display:none');
+																				$('h5#private').attr('style', 'text-align: center; height: 500px; display: block');
+																											}
+																											
+																			else if (previous_action=='request'){
+																				$('a#private_follow').data('action', 'requested');
+																				$('a#private_follow').text('Requested');
+																				$('a#private_follow').removeClass('btn-success').addClass('btn-warning').show();
+																				
+																				
+																											}
+																											
+																			else if (previous_action=='requested'){
+																				$('a#private_follow').data('action', 'request');
+																				$('a#private_follow').text('Request to Follow');
+																				$('a#private_follow').removeClass('btn-warning').addClass('btn-success').show();
+																				
+																				
+																				
+																											};
+																											
+																			
+																			
+																			}
+		
+																										});
+																    });
+																	
+																	
+																	
+																	
+							$('a#private_request').click(function(e){
+								
+								e.preventDefault();
+								$.post("{% url 'account:follow_request_requested' %}", {id:$(this).data('id'), action: $(this).data('action')}, function(data){
+																	if (data['status'] == 'ok')
+																			{
+																			var previous_action = $('a#private_request').data('action');
+																			
+																			// toggle data-action
+																											
+																			if (previous_action=='request'){
+																				$('a#private_request').data('action', 'requested');
+																				$('a#private_request').text('Requested');
+																				$('a#private_request').removeClass('btn-success').addClass('btn-warning').show();
+																				
+																				
+																											}
+																											
+																			else if (previous_action=='requested'){
+																				$('a#private_request').data('action', 'request');
+																				$('a#private_request').text('Request to Follow');
+																				$('a#private_request').removeClass('btn-warning').addClass('btn-success').show();
+																				
+																				
+																				
+																											};
+																											
+																			
+																			
+																			};
+		
+																										});
+																    });
+								
+
+							
+{% endblock prediction %}
+							

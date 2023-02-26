@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block script %}
+			<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+			<script src="{% static 'js/bwootstrap.min.js' %}"></script>
+		
+{% endblock %}
+
+{% block title%} LogIn {% endblock %}
+
+{% block content %}
+	<h3 style="font-size: 22px; margin-left: 30px; margin-top: 30px"> Please use the following form to Register: </h3>
+	
+	<form method="post" enctype="multipart/form-data" style="direction:ltr; width: 50%; margin-left: 250px; margin-top: 55px">
+		
+		{% csrf_token %}
+		{{ registerform|crispy }}
+		<p> <input type="submit" value="SignUp" class="btn btn-success ml-2"> </p>
+	</form>
+	<!--<form method="post" style="direction:ltr">
+		<label for="username">username :</label>
+		<input id="username" name="username" type="text" placeholder="username ..."><br><br>
+		<label for="password">password :</label>
+		<input id="password" name="password" type="password" placeholder="password ..."><br><br>
+		<label for="password2">password2 :</label>
+		<input id="password2" name="password2" type="password" placeholder="password again ..."><br><br>
+		
+		{% csrf_token %}
+		<p> <input type="submit" value="SignUp"> </p>
+	</form>-->
+{% endblock content%}
