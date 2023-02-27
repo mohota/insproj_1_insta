@@ -10,14 +10,14 @@
 				{% if obj.is_public == False %}
 					{% if request.user == obj or request.user in obj.followers.all %}
 						img#har {
-									
+
 									animation: new;
 									animation-iteration-count: 3;
 									animation-duration: 2.5s;
 									animation-timing-function: ease
 									}
-						
-						
+
+
 						@keyframes new {
 										0%{box-shadow: 0 0 12px #B90000}
 										25%{box-shadow: 0 0 30px orange}
@@ -32,8 +32,8 @@
 									animation-duration: 2.5s;
 									animation-timing-function: ease
 									}
-						
-						
+
+
 						@keyframes new {
 										0%{box-shadow: 0 0 12px #B90000}
 										25%{box-shadow: 0 0 30px orange}
@@ -43,16 +43,16 @@
 				{% endif %}
 			{% endif %}
 		</style>
-				
+
 {% endblock %}
 
 {% block content %}
-		
-		
+
+
 			<div style="background-color: ; width: 100%; margin: ">
 				<div style="float: left; background-color: ; width: 30%; height: 150px">
-					<img id="har" data-toggle="modal" data-target="#fdmodal" 
-					src="{% if obj.prof_image %}{{obj.prof_image.url}}{% else %}{% static 'images/image_not_found.jpg' %}{% endif %}" 
+					<img id="har" data-toggle="modal" data-target="#fdmodal"
+					src="{% if obj.prof_image %}{{obj.prof_image.url}}{% else %}{% static 'images/image_not_found.jpg' %}{% endif %}"
 						style="{% if stories != False %}{% if request.user not in stories.last.viewers.all %}box-shadow: 0 0 12px #B90000{% else %}box-shadow: 0 0 12px gray{% endif %}{% endif %}">
 				</div>
 				<div style="float: right; background-color: ; width: 70%; padding-top: 20px">
@@ -69,7 +69,7 @@
 					</a>
 				</div>
 			</div>
-			
+
 			<div style="float: left; background-color: ; width: 100%; height: auto">
 				<div style="float: left;  background-color: ; width: 70%; height: auto; margin: 20px auto auto 30px">
 					<span style="font-size: 14px">username: </span> <strong style="font-family: B-Nazanin">{{obj.username}}</strong>
@@ -88,18 +88,18 @@
 								{% if obj.my_requests.count != 0 %}<a href="{% url 'account:accept' obj.id 'my_requests' %}" style="float: right; margin-right: 40px; color: green; margin-bottom: 15px; text-decoration: none"> Your Requests: <span id="my_requests"> {{obj.my_requests.count}}</span></a>{% endif %}
 								<br>
 								{% if obj.requests.count != 0 %}<a href="{% url 'account:accept' obj.id 'users_requests' %}" style="float: right; margin-right: 40px; color: green; text-decoration: none"> Users Request: <span id="users_requests"> {{obj.requests.count}}</span></a>{% endif %}
-							
+
 						</div>
 					{% endif %}
 				{% endif %}
-				
-				
+
+
 			</div>
-			
-			
+
+
 			{% if request.user == obj  %}
 			<div style="float: left; background-color: ; width: 100%; height: auto; margin: 50px auto auto auto">
-					
+
 					<div style="float: left; width: 30%; background-color: ">
 								<a href="#" class="btn btn-primary" style="margin-left: 100px" data-toggle="modal" data-target="#editprofileform"> Edit Profile</a>
 								<!-- following <div> is a modal -->
@@ -110,22 +110,97 @@
 																		<h5 class="modal-title">Edit your Profile:</h5>
 																		<button type="button" class="close" data-dismiss="modal">&times;</button>
 																	</div>
-																	
+
 																	<div class="modal-body">
 																		<div class="row">
 																			<form method="post" enctype="multipart/form-data"  action="{% url 'account:editprofile' %}" style="width: 100%;">
-																				{{editprofileform|crispy}}
+																				<div id="div_id_username" class="form-group">
+																					<label for="id_username" class="requiredField">
+																						"Username"
+																						<span class="asteriskField">*</span>
+																					</label>
+																					<div>
+																						{{editprofileform.username}}
+																						<small id="hint_id_username" class="form-text text-muted"> Required. 150 Character or fewer. Letters, digits and @/./+/-/_ only. </small>
+																						
+																					</div>	
+																				</div>
+																				<div id="div_id_first_name" class="form-group">
+																					<label for="id_first_name" class="">
+																						"First name"
+																					</label>
+																					<div>
+																						{{editprofileform.first_name}}
+																		
+																					</div>	
+																				</div>
+																				<div id="div_id_last_name" class="form-group">
+																					<label for="id_last_name" class="">
+																						"Last name"
+																						
+																					</label>
+																					<div>
+																						{{editprofileform.last_name}}
+																		
+																					</div>	
+																				</div>
+																				<div id="div_id_email" class="form-group">
+																				
+																					<label for="id_email" >
+																						"Email address"
+																						
+																					</label>
+																					<div>
+																						{{editprofileform.email}}
+																		
+																					</div>	
+																				</div>
+																				<div id="div_id_prof_image" class="form-group">
+																					<label for="id_prof_image" class="requiredField">
+																						" Prof image"
+																						<span class="asteriskField">*</span>
+																					</label>
+																					<div>
+																						
+																						{{editprofileform.prof_image}}																				
+																						
+																					</div>	
+																				</div>
+																				<div id="div_id_biography" class="form-group">
+
+																					<label for="id_last_name" class="">
+																						" Biography"
+																						<span class="asteriskField">*</span>
+																					</label>
+																					<div>
+																						{{editprofileform.biography}}
+																		
+																					</div>	
+																				</div>
+																				<div class="form-group">
+																				
+																					<div id="div_id_is_public" class="form-check">
+																						{{editprofileform.is_public}}
+																						<label for="id_is_public" class="form-check-label">
+																							Is public
+																						</label>
+																						
+																							
+																				
+																					</div>
+																				</div>
+																				
 																				{% csrf_token %}
 																				<button type="submit" class="btn btn-success btn-block">Save Edit</button>
 																			</form>
 																		</div>
 																	</div>
-																	
-																	
+
+
 																</div>
 															</div>
 								</div>
-								
+
 					</div>
 					<div style="float: left; width: 50%; background-color: ">
 								<a href="#" class="btn btn-primary" style="margin-left: 550px" data-toggle="modal" data-target="#addpostform">+ Add Post</a>
@@ -137,23 +212,40 @@
 																		<h5 class="modal-title">Add Post to Your Profile:</h5>
 																		<button type="button" class="close" data-dismiss="modal">&times;</button>
 																	</div>
-																	
+
 																	<div class="modal-body">
 																		<div class="row">
 																			<form method="post" enctype="multipart/form-data"  action="{% url 'posts:add_post' %}" style="width: 100%;">
-																				{{addpostform|crispy}}
+																				<div id="div_id_image" class="form-group">
+																					<label for="id_image" class="requiredField">
+																						" Image"
+																						<span class="asteriskField">*</span>
+																					</label>
+																					<div>
+																						{{addpostform.image}}
+																					</div>
+																				</div>
+																				<div id="div_id_caption" class="form-group">
+																					<label for="id_caption" class="requiredField">
+																						" caption"
+																						<span class="asteriskField">*</span>
+																					</label>
+																					<div>
+																						{{addpostform.caption}}
+																					</div>
+																				</div>
 																				{% csrf_token %}
 																				<button type="submit" class="btn btn-success btn-block">Add</button>
 																			</form>
 																		</div>
 																	</div>
-																	
-																	
+
+
 																</div>
 															</div>
 								</div>
-								
-								
+
+
 					</div>
 					<div style="float: left; width: 20%; background-color: ">
 								<a href="#" class="btn btn-primary" style="margin-left: 60px" data-toggle="modal" data-target="#storyform">+ Add Story</a>
@@ -165,31 +257,39 @@
 																		<h5 class="modal-title"><strong>Add Image to your Story here</strong></h5>
 																		<button type="button" class="close" data-dismiss="modal">&times;</button>
 																	</div>
-																	
+
 																	<div class="modal-body">
 																		<div class="row">
 																			<form method="post" enctype="multipart/form-data"  action="{% url 'story:add_story' %}" style="width: 100%; background-color: ">
-																				{{storyform|crispy}}
+																				<div id="div_id_image" class="form-group">
+																					<label for="id_image" class="requiredField">
+																						" Image"
+																						<span class="asteriskField">*</span>
+																					</label>
+																					<div>
+																						{{storyform.image}}
+																					</div>
+																				</div>
 																				{% csrf_token %}
 																				<button type="submit" class="btn btn-primary btn-block" style="margin: 20px auto 20px auto">Add</button>
 																			</form>
 																		</div>
 																	</div>
-																	
-																	
+
+
 																</div>
 															</div>
 								</div>
-																				
+
 					</div>
 			</div>
 			{% endif %}
-			
-			
+
+
 			<div style="float: left; background-color: ; width: 100%; height: auto; margin: 20px auto auto auto">
 													{% if stories != False %}
-														
-														
+
+
 														<div class="modal" id="fdmodal">
 															<div class="modal-dialog modal-dialog-centered modal-lg">
 																<div class="modal-content">
@@ -197,17 +297,17 @@
 																		<h5 class="modal-title">Story</h5>
 																		<button type="button" class="close" data-dismiss="modal">&times;</button>
 																	</div>
-																	
+
 																	<div class="modal-body">
 																		<div class="row">
 																			<div style="margin-left:150px;">
 																						<div id="faradars" class="carousel slide" data-ride="carousel">
 																									<ul class="carousel-indicators">
 																										{% for s in stories %}
-																											<li data-target="#faradars" data-slide-to="{{forloop.counter}}" 
+																											<li data-target="#faradars" data-slide-to="{{forloop.counter}}"
 																												{% if forloop.first %}class="active"{% endif %}></li>
 																										{% endfor %}
-																										
+
 																									</ul>
 																									<div class="carousel-inner">
 																										{% for s in stories %}
@@ -227,11 +327,11 @@
 																										<span class="carousel-control-next-icon"></span>
 																									</a>
 																								</div>																			</div>
-																			
-																			
+
+
 																		</div>
 																	</div>
-																	
+
 																	<!-- <div class="modal-footer"> -->
 																		<!-- <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button> -->
 																	<!-- </div> -->
@@ -239,16 +339,16 @@
 															</div>
 														</div>
 													{% endif %}
-													
-													
-													
-													
-													
-													
+
+
+
+
+
+
 				{% if request.user != obj %}
 					{% if obj.is_public  %}
-						
-						
+
+
 							<a id="public_follow" href="#" class="btn {% if request.user in obj.followers.all %}btn-danger{% else %}btn-success{% endif %} btn-block"
 								data-id="{{obj.id}}" data-action="{% if request.user in obj.followers.all %}un{% endif %}follow">
 										{% if request.user in obj.followers.all %}Unfollow{% else %}Follow{% endif %}
@@ -256,81 +356,96 @@
 							<hr size=5 noshade>
 							{% if posts != False %}
 								<div id="profile_posts" style="float: left">
-									
+
 										{% include "account/list_ajax.html" %}
-																		
+
 								</div>
-								<a id="add_more_posts_btn" class="btn btn-primary btn-block" style="float: left; margin: 20px auto 20px auto; color: white"> add more .. </a>	
+								<a id="add_more_posts_btn" class="btn btn-primary btn-block" style="float: left; margin: 20px auto 20px auto; color: white"> add more .. </a>
 							{% else %}
-									
+
 								<div class="" style="background-color: ; height: 400px">
 									<h3 style="margin: 150px auto auto 40%"> No Post Yet ! </h3>
 								</div>
-								
-							{% endif %}	
+
+							{% endif %}
 					{% else %}
-					
+
 						{% if request.user in obj.followers.all %}
 							<a href="#" id="private_follow" class="btn btn-danger btn-block" style="margin-bottom: 30px"
 								data-id="{{obj.id}}" data-action="{% if request.user in obj.followers.all %}un{% endif %}follow">Unfollow</a>
 							<hr size=5 noshade>
 							{% if posts != False %}
 								<div id="profile_posts" style="float: left">
-									
+
 										{% include "account/list_ajax.html" %}
-																		
+
 								</div>
-								<a id="add_more_posts_btn" class="btn btn-primary btn-block" style="float: left; margin: 20px auto 20px auto; color: white"> add more .. </a>	
+								<a id="add_more_posts_btn" class="btn btn-primary btn-block" style="float: left; margin: 20px auto 20px auto; color: white"> add more .. </a>
 							{% else %}
-									
+
 								<div class="" style="background-color: ; height: 400px">
 									<h3 style="margin: 150px auto auto 40%"> No Post Yet ! </h3>
 								</div>
-								
+
 							{% endif %}
 						{% else %}
-							<a href="#" id="private_request" class="btn btn-{% if request.user in obj.requests.all %}warning{% else %}success{% endif %} btn-block" 
+							<a href="#" id="private_request" class="btn btn-{% if request.user in obj.requests.all %}warning{% else %}success{% endif %} btn-block"
 							style="margin-bottom: 30px" data-id="{{obj.id}}" data-action="{% if request.user in obj.requests.all %}requested{% else %}request{% endif %}">
 								{% if request.user in obj.requests.all %}Requested{% else %}Request to Follow{% endif %}</a>
-								
+
 							<hr size=5 noshade>
 							<div style="height: 400px">
 								<h5 style="text-align: center; margin: 220px auto auto auto"> Sorry, This account is private !!! </h5>
 							</div>
 						{% endif %}
-							
-						
+
+
 					{% endif %}
-				{% else %}        
+				{% else %}
 					<hr size=5 noshade>
 					{% if posts != False %}
 								<div id="profile_posts" style="float: left">
-									
+
 										{% include "account/list_ajax.html" %}
-																		
+
 								</div>
-								<a id="add_more_posts_btn" class="btn btn-primary btn-block" style="float: left; margin: 20px auto 20px auto; color: white"> add more .. </a>	
+								<a id="add_more_posts_btn" class="btn btn-primary btn-block" style="float: left; margin: 20px auto 20px auto; color: white"> add more .. </a>
 					{% else %}
-									
+
 								<div class="" style="background-color: ; height: 400px">
 									<h3 style="margin: 220px auto auto 40%"> No Post Yet ! </h3>
 								</div>
-								
+
 					{% endif %}
-					
+
 				{% endif %}
 			</div>
 {% endblock content %}
 
 
 
-{% block prediction %} 
-	
+{% block prediction %}
+
+                                $('input#id_username').addClass('textinput textInput form-control').show();
+								$('input#id_first_name').addClass('textinput textInput form-control').show();
+								$('input#id_last_name').addClass('textinput textInput form-control').show();
+								$('input#id_email').addClass('emailinput form-control').show();
+								$('input#id_prof_image').addClass('clearablefileinput form-control-file').show();
+								$('textarea#id_biography').addClass('textarea form-control').show();
+								$('input#id_is_public').addClass('checkboxinput form-check-label form-check-input').show();
 								
-							
 								
+								$('input#id_image').addClass('clearablefileinput form-control-file').show();
+								
+								
+								$('input#id_image').addClass('clearablefileinput form-control-file').show();
+								$('textarea#id_caption').addClass('textarea form-control').show();
+								
+								
+
+
 								$('a#public_follow').click(function(e){
-								
+
 								e.preventDefault();
 								$.post("{% url 'account:follow_unfollow' %}", {id:$(this).data('id'), action: $(this).data('action')}, function(data){
 																	if (data['status'] == 'ok')
@@ -339,7 +454,7 @@
 																			// toggle data-action
 																			$('a#public_follow').data('action', previous_action == 'follow' ?
 																			'unfollow' : 'follow');
-																			
+
 																			// toggle link text
 																			$('a#public_follow').text(previous_action == 'follow' ? 'Unfollow' :
 																			'Follow');
@@ -347,124 +462,124 @@
 																			$('span#follower_count').text(data['user_followers']);
 																			$('span#following_count').text(data['user_followings']);
 																			$('a#public_follow').removeClass(previous_action == 'follow' ?'btn-success':'btn-danger').addClass(previous_action == 'follow' ?'btn-danger':'btn-success').show();
-																			
+
 																			}
-		
+
 																										});
 																    });
-																	
-								
-								
-								
-																	
-																	
-								
-								
+
+
+
+
+
+
+
+
 								$('a#private_follow').click(function(e){
-								
+
 								e.preventDefault();
 								$.post("{% url 'account:follow_request_requested' %}", {id:$(this).data('id'), action: $(this).data('action')}, function(data){
 																	if (data['status'] == 'ok')
 																			{
 																			var previous_action = $('a#private_follow').data('action');
-																			
+
 																			// toggle data-action
 																			if (previous_action=='unfollow'){
 																				$('a#private_follow').data('action', 'request');
 																				$('a#private_follow').text('Request to Follow');
 																				$('a#private_follow').removeClass('btn-danger').addClass('btn-success').show();
-																				
+
 																				$('span#follower_count').text(data['user_followers']);
 																				$('span#following_count').text(data['user_followings']);
-																				
+
 																				$('h5#posts').attr('style', 'display:none');
 																				$('h5#private').attr('style', 'text-align: center; height: 500px; display: block');
 																											}
-																											
+
 																			else if (previous_action=='request'){
 																				$('a#private_follow').data('action', 'requested');
 																				$('a#private_follow').text('Requested');
 																				$('a#private_follow').removeClass('btn-success').addClass('btn-warning').show();
-																				
-																				
+
+
 																											}
-																											
+
 																			else if (previous_action=='requested'){
 																				$('a#private_follow').data('action', 'request');
 																				$('a#private_follow').text('Request to Follow');
 																				$('a#private_follow').removeClass('btn-warning').addClass('btn-success').show();
-																				
-																				
-																				
+
+
+
 																											};
-																											
-																			
-																			
+
+
+
 																			}
-		
+
 																										});
 																    });
-																	
-																	
-																	
-																	
+
+
+
+
 							$('a#private_request').click(function(e){
-								
+
 								e.preventDefault();
 								$.post("{% url 'account:follow_request_requested' %}", {id:$(this).data('id'), action: $(this).data('action')}, function(data){
 																	if (data['status'] == 'ok')
 																			{
 																			var previous_action = $('a#private_request').data('action');
-																			
+
 																			// toggle data-action
-																											
+
 																			if (previous_action=='request'){
 																				$('a#private_request').data('action', 'requested');
 																				$('a#private_request').text('Requested');
 																				$('a#private_request').removeClass('btn-success').addClass('btn-warning').show();
-																				
-																				
+
+
 																											}
-																											
+
 																			else if (previous_action=='requested'){
 																				$('a#private_request').data('action', 'request');
 																				$('a#private_request').text('Request to Follow');
 																				$('a#private_request').removeClass('btn-warning').addClass('btn-success').show();
-																				
-																				
-																				
+
+
+
 																											};
-																											
-																			
-																			
+
+
+
 																			};
-		
+
 																										});
 																    });
-																	
-																	
-																	
+
+
+
 								var page = 2;
 								var empty_page = false;
-								
+
 								$('a#add_more_posts_btn').click(function() {
-										
+
 											if (empty_page == false) {
 												$.post('?page=' + page, function(data) {
 													if(data == '') {
 														empty_page = true;
 																	}
-													else {	
+													else {
 															page += 1;
 															empty_page = false;
 															$('div#profile_posts').append(data);
-														}	
+														}
 													});
 																	}
-																															
-											});
-								
 
-							
+											});
+
+
+
 {% endblock prediction %}
-							
+
